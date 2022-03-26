@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\RocketTanuki\RocketTanuki.csproj" />
