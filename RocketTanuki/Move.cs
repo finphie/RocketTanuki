@@ -47,6 +47,25 @@ namespace RocketTanuki
             return obj is Move move && Equals(move);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+
+            hash.Add(FileFrom);
+            hash.Add(RankFrom);
+            hash.Add(PieceFrom);
+            hash.Add(FileTo);
+            hash.Add(RankTo);
+            hash.Add(PieceTo);
+            hash.Add(SideToMove);
+            hash.Add(Drop);
+            hash.Add(Promotion);
+
+            return hash.ToHashCode();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Move other)
         {
             Debug.Assert(Unsafe.SizeOf<Move>() == 30);
