@@ -121,8 +121,8 @@ namespace RocketTanuki
         }
 
         private Task searchTask;
-        private List<Searcher> searchers = new List<Searcher>();
-        private List<Task<BestMove>> searchTasks = new List<Task<BestMove>>();
+        private readonly List<Searcher> searchers = new List<Searcher>();
+        private readonly List<Task<BestMove>> searchTasks = new List<Task<BestMove>>();
 
         // [雑記] スレッド間の競合回避 - C# によるプログラミング入門 | ++C++; // 未確認飛行 C https://ufcpp.net/study/csharp/misc_synchronize.html
         public volatile bool thinking = false;

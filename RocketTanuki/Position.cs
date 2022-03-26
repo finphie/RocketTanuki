@@ -10,7 +10,7 @@ namespace RocketTanuki
     /// <summary>
     /// 局面を表すデータ構造
     /// </summary>
-    public class Position
+    public sealed class Position
     {
         public const string StartposSfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
         public const string MatsuriSfen = "l6nl/5+P1gk/2np1S3/p1p4Pp/3P2Sp1/1PPb2P1P/P5GS1/R8/LN4bKL w RGgsn5p 1";
@@ -553,7 +553,7 @@ namespace RocketTanuki
         private Move lastMove;
     }
 
-    public class PositionState
+    public sealed class PositionState
     {
         // 一つ前の局面の局面情報
         // Rootノードの場合はnull

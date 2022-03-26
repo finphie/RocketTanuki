@@ -242,8 +242,6 @@ namespace RocketTanuki
 
             var sideToMove = position.SideToMove;
             var board = position.Board;
-            var handPieces = position.HandPieces;
-            var nonCaptureMoves = new List<Move>();
 
             // 駒を移動する指し手
             for (int fileFrom = 0; fileFrom < Position.BoardSize; ++fileFrom)
