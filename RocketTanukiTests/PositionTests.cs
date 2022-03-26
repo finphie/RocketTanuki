@@ -21,7 +21,7 @@ namespace RocketTanukiTests
 				var position = new Position();
 				position.Set(sfen);
 
-				long hash = position.Hash;
+				ulong hash = position.Hash;
 				foreach (var move in MoveGenerator.Generate(position, null))
 				{
 					using (var mover = new Mover(position, move)) { }

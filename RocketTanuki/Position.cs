@@ -21,7 +21,7 @@ namespace RocketTanuki
         public Piece[,] Board { get; } = new Piece[BoardSize, BoardSize];
         public int[] HandPieces { get; } = new int[(int)Piece.NumPieces];
         public int Play { get; set; }
-        public long Hash { get; set; }
+        public ulong Hash { get; set; }
         public int BlackKingFile { get; set; }
         public int BlackKingRank { get; set; }
         public int WhiteKingFile { get; set; }

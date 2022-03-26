@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,24 +18,31 @@ namespace RocketTanuki
 
     public struct TranspositionTableEntry
     {
-        public long Hash { get; set; }
-        public ushort Move { get; set; }
-        public sbyte Depth { get; set; }
-        public byte Bound { get; set; }
-        public ushort Generation { get; set; }
-        public short Value { get; set; }
+        public ulong Hash;
+        public ushort Move;
+        public sbyte Depth;
+        public byte Bound;
+        public ushort Generation;
+        public short Value;
     }
 
-    public class TranspositionTable
+    public unsafe sealed class TranspositionTable
     {
         public static TranspositionTable Instance { get; } = new TranspositionTable();
-        private const int EntrySize = 16;
+
+        TranspositionTableEntry* Entries = (TranspositionTableEntry*)Unsafe.AsPointer(ref Unsafe.NullRef<TranspositionTableEntry>());
+        ulong length;
 
         public void Resize(int hashSizeMb)
         {
-            long numEntries = hashSizeMb / EntrySize * 1024 * 1024;
-            numEntries = Math.Min(numEntries, 0x40000000);
-            Entries = new TranspositionTableEntry[numEntries];
+            if (!Unsafe.IsNullRef(ref Unsafe.AsRef<TranspositionTableEntry>(Entries)))
+            {
+                NativeMemory.Free(Entries);
+            }
+
+            var size = checked((ulong)hashSizeMb * 1024 * 1024);
+            length = size / (uint)Unsafe.SizeOf<TranspositionTableEntry>();
+            Entries = (TranspositionTableEntry*)NativeMemory.Alloc(checked((nuint)length), (nuint)Unsafe.SizeOf<TranspositionTableEntry>());
         }
 
         public void NewSearch()
@@ -42,35 +50,38 @@ namespace RocketTanuki
             generation = (generation + 1) & 0xffff;
         }
 
-        public void Save(long hash, int value, int depth, Move move, Bound bound)
+        public void Save(ulong hash, int value, int depth, Move move, Bound bound)
         {
-            long numEntries = Entries.LongLength;
-            long mask = numEntries - 1;
-            long index = hash & mask;
+            ulong mask = length - 1;
+            ulong index = hash & mask;
+
+            ref var entry = ref Entries[index];
 
             if (bound == Bound.Exact
-                || hash != Entries[index].Hash
-                || Entries[index].Depth < depth)
+                || hash != entry.Hash
+                || entry.Depth < depth)
             {
-                Entries[index].Hash = hash;
-                Entries[index].Move = move.ToUshort();
-                Entries[index].Depth = (sbyte)depth;
-                Entries[index].Bound = (byte)bound;
-                Entries[index].Generation = (ushort)generation;
-                Entries[index].Value = (short)value;
+
+                entry.Hash = hash;
+                entry.Move = move.ToUshort();
+                entry.Depth = (sbyte)depth;
+                entry.Bound = (byte)bound;
+                entry.Generation = (ushort)generation;
+                entry.Value = (short)value;
             }
         }
 
-        public TranspositionTableEntry Probe(long hash, out bool found)
+        public TranspositionTableEntry Probe(ulong hash, out bool found)
         {
-            long numEntries = Entries.LongLength;
-            long mask = numEntries - 1;
-            long index = hash & mask;
-            found = Entries[index].Hash == hash;
-            return Entries[index];
+            ulong mask = length - 1;
+            ulong index = hash & mask;
+
+            ref var entry = ref Entries[index];
+            found = entry.Hash == hash;
+
+            return entry;
         }
 
-        private TranspositionTableEntry[] Entries;
         private int generation;
     }
 }

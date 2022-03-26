@@ -9,9 +9,9 @@ namespace RocketTanuki
 {
     public class Zobrist
     {
-        public long[,,] PieceSquare { get; } = new long[(int)Piece.NumPieces, Position.BoardSize, Position.BoardSize];
-        public long[] HandPiece { get; } = new long[(int)Piece.NumPieces];
-        public long Side { get; set; }
+        public ulong[,,] PieceSquare { get; } = new ulong[(int)Piece.NumPieces, Position.BoardSize, Position.BoardSize];
+        public ulong[] HandPiece { get; } = new ulong[(int)Piece.NumPieces];
+        public ulong Side { get; set; }
         public static Zobrist Instance { get; } = new Zobrist();
 
         public Zobrist()
@@ -36,12 +36,12 @@ namespace RocketTanuki
             Side = 1;
         }
 
-        private static long GetRandomValue(Random random)
+        private static ulong GetRandomValue(Random random)
         {
-			var buf = new byte[8];
-			random.NextBytes(buf);
+            Span<byte> buf = stackalloc byte[8];
+            random.NextBytes(buf);
             // 最下位のビットを落とさないと、Sideと被り、意図しない計算結果となる。
-			return BitConverter.ToInt64(buf, 0) & 0xffffffffffffe;
+			return BitConverter.ToUInt64(buf) & 0xffffffffffffe;
         }
     }
 }
