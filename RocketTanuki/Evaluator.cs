@@ -224,13 +224,13 @@ namespace RocketTanuki
 
             if (position.SideToMove == Color.Black)
             {
-                first = MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
-                second = MemoryMarshal.GetArrayDataReference(position.State.Z1White);
+                first = ref MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
+                second = ref MemoryMarshal.GetArrayDataReference(position.State.Z1White);
             }
             else
             {
-                first = MemoryMarshal.GetArrayDataReference(position.State.Z1White);
-                second = MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
+                first = ref MemoryMarshal.GetArrayDataReference(position.State.Z1White);
+                second = ref MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
             }
 
             ref var a1First = ref MemoryMarshal.GetReference(a1);
