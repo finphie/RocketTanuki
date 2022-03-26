@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace RocketTanuki
@@ -71,24 +70,24 @@ namespace RocketTanuki
         private static readonly Direction Down = new Direction { DeltaFile = 0, DeltaRank = +1 };
         private static readonly Direction DownRight = new Direction { DeltaFile = -1, DeltaRank = +1 };
 
-        public static readonly List<MoveDirection>[] MoveDirections = {
+        public static readonly MoveDirection[][] MoveDirections = {
             // NoPiece
             null,
             // BlackPawn
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
             },
             // BlackLance
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up,Long=true},
             },
             // BlackKnight
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=new Direction{DeltaRank=-2,DeltaFile=+1}},
                 new MoveDirection{Direction=new Direction{DeltaRank=-2,DeltaFile=-1}},
             },
             // BlackSilver
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -96,7 +95,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // BlackGold
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -105,21 +104,21 @@ namespace RocketTanuki
                 new MoveDirection{Direction=Down},
             },
             // BlackBishop
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft,Long=true},
                 new MoveDirection{Direction=UpRight,Long=true},
                 new MoveDirection{Direction=DownLeft,Long=true},
                 new MoveDirection{Direction=DownRight,Long=true},
             },
             // BlackRook
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up,Long=true},
                 new MoveDirection{Direction=Left,Long=true},
                 new MoveDirection{Direction=Right,Long=true},
                 new MoveDirection{Direction=Down,Long=true},
             },
             // BlackKing
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -130,7 +129,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // BlackPromotedPawn
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -139,7 +138,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=Down},
             },
             // BlackPromotedLance
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -148,7 +147,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=Down},
             },
             // BlackPromotedKnight
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -157,7 +156,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=Down},
             },
             // BlackPromotedSilver
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -166,7 +165,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=Down},
             },
             // BlackHorse
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft,Long=true},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight,Long=true},
@@ -177,7 +176,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight,Long=true},
             },
             // BlackDragon
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up,Long=true},
                 new MoveDirection{Direction=UpRight},
@@ -188,20 +187,20 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhitePawn
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Down},
             },
             // WhiteLance
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Down,Long=true},
             },
             // WhiteKnight
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=new Direction{DeltaRank=2,DeltaFile=+1}},
                 new MoveDirection{Direction=new Direction{DeltaRank=2,DeltaFile=-1}},
             },
             // WhiteSilver
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=UpRight},
                 new MoveDirection{Direction=DownLeft},
@@ -209,7 +208,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhiteGold
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=Left},
                 new MoveDirection{Direction=Right},
@@ -218,21 +217,21 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhiteBishop
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft,Long=true},
                 new MoveDirection{Direction=UpRight,Long=true},
                 new MoveDirection{Direction=DownLeft,Long=true},
                 new MoveDirection{Direction=DownRight,Long=true},
             },
             // WhiteRook
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up,Long=true},
                 new MoveDirection{Direction=Left,Long=true},
                 new MoveDirection{Direction=Right,Long=true},
                 new MoveDirection{Direction=Down,Long=true},
             },
             // WhiteKing
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight},
@@ -243,7 +242,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhitePromotedPawn
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=Left},
                 new MoveDirection{Direction=Right},
@@ -252,7 +251,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhitePromotedLance
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=Left},
                 new MoveDirection{Direction=Right},
@@ -261,7 +260,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhitePromotedKnight
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=Left},
                 new MoveDirection{Direction=Right},
@@ -270,7 +269,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhitePromotedSilver
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=Left},
                 new MoveDirection{Direction=Right},
@@ -279,7 +278,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight},
             },
             // WhiteHorse
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft,Long=true},
                 new MoveDirection{Direction=Up},
                 new MoveDirection{Direction=UpRight,Long=true},
@@ -290,7 +289,7 @@ namespace RocketTanuki
                 new MoveDirection{Direction=DownRight,Long=true},
             },
             // WhiteDragon
-            new List<MoveDirection>{
+            new MoveDirection[]{
                 new MoveDirection{Direction=UpLeft},
                 new MoveDirection{Direction=Up,Long=true},
                 new MoveDirection{Direction=UpRight},
