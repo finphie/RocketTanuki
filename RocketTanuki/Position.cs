@@ -27,7 +27,7 @@ namespace RocketTanuki
         public int WhiteKingFile { get; set; }
         public int WhiteKingRank { get; set; }
         public PositionState State { get; set; }
-        public Move LastMove { get; set; }
+        public ref Move LastMove => ref lastMove;
 
         public static void Initialize()
         {
@@ -550,6 +550,7 @@ namespace RocketTanuki
                 Piece.BlackRook, Piece.BlackBishop, Piece.BlackGold,Piece.BlackSilver,Piece.BlackKnight,Piece.BlackLance,Piece.BlackPawn,
                 Piece.WhiteRook, Piece.WhiteBishop, Piece.WhiteGold,Piece.WhiteSilver,Piece.WhiteKnight,Piece.WhiteLance,Piece.WhitePawn,
             };
+        private Move lastMove;
     }
 
     public class PositionState

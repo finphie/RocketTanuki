@@ -413,7 +413,7 @@ namespace RocketTanuki
             Array.Copy(position.State.Previous.Z1Black, position.State.Z1Black, HalfDimentions);
             Array.Copy(position.State.Previous.Z1White, position.State.Z1White, HalfDimentions);
 
-            var move = position.LastMove;
+            ref var move = ref position.LastMove;
             if (move.PieceTo != Piece.NoPiece)
             {
                 // 相手の駒を取る指し手
