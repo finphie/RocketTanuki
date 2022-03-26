@@ -27,11 +27,13 @@ namespace RocketTanuki
         public bool Drop;
         public bool Promotion;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Move left, Move right)
         {
             return left.Equals(right);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Move left, Move right)
         {
             return !(left == right);
