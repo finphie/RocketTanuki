@@ -215,7 +215,7 @@ namespace RocketTanuki
             UpdateAccumulator(position);
 
             // ClippedReLU
-            var a1 = new byte[HalfDimentions * 2];
+            Span<byte> a1 = stackalloc byte[HalfDimentions * 2];
             short[] first;
             short[] second;
 
@@ -236,7 +236,7 @@ namespace RocketTanuki
             }
 
             // 隠れ層第1層から隠れ層第2層の間のネットワークパラメーター
-            var z2 = new int[32];
+            Span<int> z2 = stackalloc int[32];
             fixed (byte* a1Pointer = a1)
             fixed (sbyte* firstWeightsPointer = firstWeights)
             {
@@ -265,14 +265,14 @@ namespace RocketTanuki
                 }
             }
 
-            var a2 = new byte[32];
+            Span<byte> a2 = stackalloc byte[32];
             for (int outputIndex = 0; outputIndex < z2.Length; ++outputIndex)
             {
                 a2[outputIndex] = (byte)Clamp(z2[outputIndex] >> WeightScaleBits, 0, 127);
             }
 
             // 隠れ層第2層から隠れ層第3層の間のネットワークパラメーター
-            var z3 = new int[32];
+            Span<int> z3 = stackalloc int[32];
             fixed (byte* a2Pointer = a2)
             fixed (sbyte* secondWeightsPointer = secondWeights)
             {
@@ -301,7 +301,7 @@ namespace RocketTanuki
                 }
             }
 
-            var a3 = new int[32];
+            Span<int> a3 = stackalloc int[32];
             for (int outputIndex = 0; outputIndex < z3.Length; ++outputIndex)
             {
                 a3[outputIndex] = Max(0, Min(127, z3[outputIndex] >> WeightScaleBits));
