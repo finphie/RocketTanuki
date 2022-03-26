@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
 using System.Text;
 using System.Threading.Tasks;
 using static RocketTanuki.Types;
@@ -12,7 +14,8 @@ namespace RocketTanuki
     /// <summary>
     /// 指し手を表すデータ構造
     /// </summary>
-    public record struct Move
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Move : IEquatable<Move>
     {
         public int FileFrom;
         public int RankFrom;
@@ -20,13 +23,41 @@ namespace RocketTanuki
         public int FileTo;
         public int RankTo;
         public Piece PieceTo;
+        public Color SideToMove;
         public bool Drop;
         public bool Promotion;
-        public Color SideToMove;
+
+        public static bool operator ==(Move left, Move right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Move left, Move right)
+        {
+            return !(left == right);
+        }
 
         public override string ToString()
         {
             return $"{SideToMove.ToHumanReadableString()}{(char)('１' + FileTo)}{RankToKanjiLetters[RankTo]}{PieceFrom.ToHumanReadableString().Trim()[0]}{(Promotion ? "成" : "")}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Move move && Equals(move);
+        }
+
+        public bool Equals(Move other)
+        {
+            Debug.Assert(Unsafe.SizeOf<Move>() == 30);
+
+            ref var x = ref Unsafe.As<Move, Vector128<ulong>>(ref this);
+            ref var y = ref Unsafe.As<Move, Vector128<ulong>>(ref other);
+            var offset = (nuint)Unsafe.SizeOf<Move>() - (nuint)Unsafe.SizeOf<Vector128<ulong>>();
+
+            // 最適化のため三項演算子でtrue/falseを返す。
+            // https://github.com/dotnet/runtime/issues/4207
+            return (x == y && Unsafe.AddByteOffset(ref x, offset) == Unsafe.AddByteOffset(ref y, offset)) ? true : false;
         }
 
         public string ToUsiString()

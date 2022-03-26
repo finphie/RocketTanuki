@@ -94,5 +94,17 @@ namespace RocketTanukiTests
 
             Assert.AreEqual(expected, Move.FromUsiString(position, "P*1e"));
         }
+
+        [TestMethod]
+        public void Equals_Promotion()
+        {
+            var move1 = default(Move);
+            var move2 = move1 with
+            {
+                Promotion = true
+            };
+
+            Assert.IsFalse(move1.Equals(move2));
+        }
     }
 }
