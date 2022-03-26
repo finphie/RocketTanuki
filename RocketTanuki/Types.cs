@@ -45,13 +45,13 @@ namespace RocketTanuki
         NumPieces,
     }
 
-    public class Direction
+    public sealed class Direction
     {
         public int DeltaFile { get; set; }
         public int DeltaRank { get; set; }
     }
 
-    public class MoveDirection
+    public sealed class MoveDirection
     {
         public Direction Direction { get; set; }
         public bool Long { get; set; } = false;
@@ -62,16 +62,16 @@ namespace RocketTanuki
     /// </summary>
     public static class Types
     {
-        private static Direction UpLeft = new Direction { DeltaFile = +1, DeltaRank = -1 };
-        private static Direction Up = new Direction { DeltaFile = 0, DeltaRank = -1 };
-        private static Direction UpRight = new Direction { DeltaFile = -1, DeltaRank = -1 };
-        private static Direction Left = new Direction { DeltaFile = +1, DeltaRank = 0 };
-        private static Direction Right = new Direction { DeltaFile = -1, DeltaRank = 0 };
-        private static Direction DownLeft = new Direction { DeltaFile = +1, DeltaRank = +1 };
-        private static Direction Down = new Direction { DeltaFile = 0, DeltaRank = +1 };
-        private static Direction DownRight = new Direction { DeltaFile = -1, DeltaRank = +1 };
+        private static readonly Direction UpLeft = new Direction { DeltaFile = +1, DeltaRank = -1 };
+        private static readonly Direction Up = new Direction { DeltaFile = 0, DeltaRank = -1 };
+        private static readonly Direction UpRight = new Direction { DeltaFile = -1, DeltaRank = -1 };
+        private static readonly Direction Left = new Direction { DeltaFile = +1, DeltaRank = 0 };
+        private static readonly Direction Right = new Direction { DeltaFile = -1, DeltaRank = 0 };
+        private static readonly Direction DownLeft = new Direction { DeltaFile = +1, DeltaRank = +1 };
+        private static readonly Direction Down = new Direction { DeltaFile = 0, DeltaRank = +1 };
+        private static readonly Direction DownRight = new Direction { DeltaFile = -1, DeltaRank = +1 };
 
-        public static List<MoveDirection>[] MoveDirections = {
+        public static readonly List<MoveDirection>[] MoveDirections = {
             // NoPiece
             null,
             // BlackPawn
@@ -461,9 +461,9 @@ namespace RocketTanuki
             return PieceToString[(int)piece];
         }
 
-        private static Piece[] NonPromotedToPromoted = new Piece[(int)Piece.NumPieces];
+        private static readonly Piece[] NonPromotedToPromoted = new Piece[(int)Piece.NumPieces];
 
-        private static Piece[] PieceToOpponentHandPieces = {
+        private static readonly Piece[] PieceToOpponentHandPieces = {
             Piece.NoPiece,
             Piece.WhitePawn,
             Piece.WhiteLance,
@@ -496,7 +496,7 @@ namespace RocketTanuki
             Piece.NumPieces,
         };
 
-        private static Piece[] PieceToOpponentPieces = {
+        private static readonly Piece[] PieceToOpponentPieces = {
             Piece.NoPiece,
             Piece.WhitePawn,
             Piece.WhiteLance,
@@ -529,7 +529,7 @@ namespace RocketTanuki
             Piece.NumPieces,
         };
 
-        private static Piece[] PieceToNonPromotedPieces = {
+        private static readonly Piece[] PieceToNonPromotedPieces = {
             Piece.NoPiece,
             Piece.BlackPawn,
             Piece.BlackLance,
