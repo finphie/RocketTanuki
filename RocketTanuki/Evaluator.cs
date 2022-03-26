@@ -8,7 +8,7 @@ using static System.Math;
 
 namespace RocketTanuki
 {
-    public class Evaluator
+    public sealed class Evaluator
     {
         /// <summary>
         /// P特徴量のインデックス
@@ -62,7 +62,7 @@ namespace RocketTanuki
         /// 盤上の駒のPieceIdのオフセット。
         /// [Piece][先手視点・後手視点]でアクセスする。
         /// </summary>
-        private static PieceId[] BoardPieceIds = new PieceId[]{
+        private static readonly PieceId[] BoardPieceIds = new PieceId[]{
             PieceId.PieceIdZero,
             PieceId.FriendPawn,
             PieceId.FriendLance,
@@ -98,7 +98,7 @@ namespace RocketTanuki
         /// 持ち駒のPieceIdのオフセット。
         /// [Piece][先手視点・後手視点]でアクセスする。
         /// </summary>
-        private static PieceId[] HandPieceIds = new PieceId[] {
+        private static readonly PieceId[] HandPieceIds = new PieceId[] {
             PieceId.PieceIdZero,
             PieceId.FriendHandPawn,
             PieceId.FriendHandLance,
@@ -615,7 +615,7 @@ namespace RocketTanuki
         private const int _MM_PERM_BADC = 0x4E;
         private const int _MM_PERM_CDAB = 0xB1;
 
-        private static int[] MaterialValues = {
+        private static readonly int[] MaterialValues = {
             ZeroValue,
             PawnValue,
             LanceValue,
@@ -647,13 +647,13 @@ namespace RocketTanuki
             -DragonValue,
             InvalidValue,
         };
-        private short[] featureTransformerBiases = new short[HalfDimentions];
-        private short[] featureTransformerWeights = new short[HalfDimentions * 125388];
-        private int[] firstBiases = new int[32];
-        private sbyte[] firstWeights = new sbyte[32 * HalfDimentions * 2];
-        private int[] secondBiases = new int[32];
-        private sbyte[] secondWeights = new sbyte[32 * 32];
-        private int[] thirdBiases = new int[1];
-        private sbyte[] thirdWeights = new sbyte[1 * 32];
+        private readonly short[] featureTransformerBiases = new short[HalfDimentions];
+        private readonly short[] featureTransformerWeights = new short[HalfDimentions * 125388];
+        private readonly int[] firstBiases = new int[32];
+        private readonly sbyte[] firstWeights = new sbyte[32 * HalfDimentions * 2];
+        private readonly int[] secondBiases = new int[32];
+        private readonly sbyte[] secondWeights = new sbyte[32 * 32];
+        private readonly int[] thirdBiases = new int[1];
+        private readonly sbyte[] thirdWeights = new sbyte[1 * 32];
     }
 }
