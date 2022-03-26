@@ -26,7 +26,7 @@ namespace RocketTanuki
         void Run()
         {
             //Debugger.Launch();
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            Environment.CurrentDirectory = Path.GetDirectoryName(AppContext.BaseDirectory);
 
             Initialize();
 
