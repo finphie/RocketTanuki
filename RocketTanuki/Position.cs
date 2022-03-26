@@ -104,7 +104,7 @@ namespace RocketTanuki
 
             State = State.Previous;
 
-            LastMove = null;
+            LastMove = Move.None;
 
             --Play;
 
@@ -208,7 +208,7 @@ namespace RocketTanuki
             WhiteKingFile = 0;
             WhiteKingRank = 0;
             State = null;
-            LastMove = null;
+            LastMove = Move.None;
 
             // 盤面
             int file = BoardSize - 1;

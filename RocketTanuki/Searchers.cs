@@ -78,8 +78,8 @@ namespace RocketTanuki
             // bestmoveを出力する
             var writer = new StringWriter();
             writer.Write("bestmove ");
-            // stopコマンド受信時にbestMove.Moveがnullの場合があるため
-            if (bestMove.Move != null)
+            // stopコマンド受信時にbestMove.MoveがNoneの場合があるため
+            if (bestMove.Move != Move.None)
             {
                 writer.Write(bestMove.Move.ToUsiString());
             }
@@ -88,7 +88,6 @@ namespace RocketTanuki
                 writer.Write("resign");
             }
             if (bestMove.Next != null &&
-                bestMove.Next.Move != null &&
                 bestMove.Next.Move != Move.Resign &&
                 bestMove.Next.Move != Move.Win &&
                 bestMove.Next.Move != Move.None)

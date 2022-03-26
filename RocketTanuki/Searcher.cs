@@ -135,7 +135,7 @@ namespace RocketTanuki
             BestMove bestChildBestMove = null;
             Move bestMove = Move.Resign;
             bool searchPv = true;
-            Move transpositionTableMove = found ? Move.FromUshort(position, transpositionTableEntry.Move) : null;
+            Move transpositionTableMove = found ? Move.FromUshort(position, transpositionTableEntry.Move) : Move.None;
             foreach (var move in MoveGenerator.Generate(position, transpositionTableMove))
             {
                 if (!Searchers.Instance.thinking)
@@ -265,7 +265,7 @@ namespace RocketTanuki
             BestMove bestChildBestMove = null;
             Move bestMove = Move.None;
             bool searchPv = true;
-            foreach (var move in MoveGenerator.Generate(position, null, fileLastMove, rankLastMove))
+            foreach (var move in MoveGenerator.Generate(position, Move.None, fileLastMove, rankLastMove))
             {
                 BestMove childBestMove;
                 Interlocked.Increment(ref numSearchedNodes);

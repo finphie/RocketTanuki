@@ -21,8 +21,7 @@ namespace RocketTanuki
         /// <returns></returns>
         public static IEnumerable<Move> Generate(Position position, Move transpositionTableMove)
         {
-            if (transpositionTableMove != null
-                && transpositionTableMove != Move.Resign
+            if (transpositionTableMove != Move.Resign
                 && transpositionTableMove != Move.Win
                 && transpositionTableMove != Move.None
                 && position.IsValid(transpositionTableMove))
@@ -225,8 +224,7 @@ namespace RocketTanuki
         /// <returns></returns>
         public static IEnumerable<Move> Generate(Position position, Move transpositionTableMove, int fileCapture, int rankCapture)
         {
-            if (transpositionTableMove != null
-                && transpositionTableMove != Move.Resign
+            if (transpositionTableMove != Move.Resign
                 && transpositionTableMove != Move.Win
                 && transpositionTableMove != Move.None
                 && position.IsValid(transpositionTableMove))

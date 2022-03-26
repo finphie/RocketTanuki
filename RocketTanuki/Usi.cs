@@ -65,8 +65,8 @@ namespace RocketTanuki
             // pv
             writer.Write(" pv");
             BestMove current = bestMove;
-            // stopコマンド受信時にcurrent.Moveがnullの場合があるため
-            while (current != null && current.Move != null && current.Move != Move.Resign)
+            // stopコマンド受信時にcurrent.MoveがNoneの場合があるため
+            while (current != null && current.Move != Move.None && current.Move != Move.Resign)
             {
                 writer.Write(" ");
                 writer.Write(current.Move.ToUsiString());

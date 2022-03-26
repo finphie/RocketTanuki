@@ -404,7 +404,7 @@ namespace RocketTanuki
             Debug.Assert(position.LastMove.PieceTo != Piece.WhiteKing);
 
             // 差分計算
-            Debug.Assert(position.LastMove != null);
+            Debug.Assert(position.LastMove != Move.None);
 
             position.State.Z1Black = new short[HalfDimentions];
             position.State.Z1White = new short[HalfDimentions];

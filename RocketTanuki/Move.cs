@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static RocketTanuki.Types;
@@ -11,65 +12,21 @@ namespace RocketTanuki
     /// <summary>
     /// 指し手を表すデータ構造
     /// </summary>
-    public class Move
+    public record struct Move
     {
-        public int FileFrom { get; set; }
-        public int RankFrom { get; set; }
-        public Piece PieceFrom { get; set; }
-        public int FileTo { get; set; }
-        public int RankTo { get; set; }
-        public Piece PieceTo { get; set; }
-        public bool Drop { get; set; }
-        public bool Promotion { get; set; }
-        public Color SideToMove { get; set; }
+        public int FileFrom;
+        public int RankFrom;
+        public Piece PieceFrom;
+        public int FileTo;
+        public int RankTo;
+        public Piece PieceTo;
+        public bool Drop;
+        public bool Promotion;
+        public Color SideToMove;
 
         public override string ToString()
         {
             return $"{SideToMove.ToHumanReadableString()}{(char)('１' + FileTo)}{RankToKanjiLetters[RankTo]}{PieceFrom.ToHumanReadableString().Trim()[0]}{(Promotion ? "成" : "")}";
-        }
-
-        // override object.Equals
-        public override bool Equals(object obj)
-        {
-            //       
-            // See the full list of guidelines at
-            //   http://go.microsoft.com/fwlink/?LinkID=85237  
-            // and also the guidance for operator== at
-            //   http://go.microsoft.com/fwlink/?LinkId=85238
-            //
-
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var rh = (Move)obj;
-            return FileFrom == rh.FileFrom
-                && RankFrom == rh.RankFrom
-                && PieceFrom == rh.PieceFrom
-                && FileTo == rh.FileTo
-                && RankTo == rh.RankTo
-                && PieceTo == rh.PieceTo
-                && Drop == rh.Drop
-                && Promotion == rh.Promotion
-                && SideToMove == rh.SideToMove;
-        }
-
-        // override object.GetHashCode
-        public override int GetHashCode()
-        {
-            // boost/container_hash/hash.hpp - 1.74.0 https://www.boost.org/doc/libs/1_74_0/boost/container_hash/hash.hpp
-            int seed = 0;
-            seed ^= FileFrom + (seed << 6) + (seed >> 2);
-            seed ^= RankFrom + (seed << 6) + (seed >> 2);
-            seed ^= (int)PieceFrom + (seed << 6) + (seed >> 2);
-            seed ^= FileTo + (seed << 6) + (seed >> 2);
-            seed ^= RankTo + (seed << 6) + (seed >> 2);
-            seed ^= (int)PieceTo + (seed << 6) + (seed >> 2);
-            seed ^= Convert.ToInt32(Drop) + (seed << 6) + (seed >> 2);
-            seed ^= Convert.ToInt32(Promotion) + (seed << 6) + (seed >> 2);
-            seed ^= (int)SideToMove + (seed << 6) + (seed >> 2);
-            return seed;
         }
 
         public string ToUsiString()
@@ -121,7 +78,7 @@ namespace RocketTanuki
                 return Move.None;
             }
 
-            var move = new Move();
+            Unsafe.SkipInit(out Move move);
             if (moveString[1] == '*')
             {
                 // 駒打ちの指し手
@@ -221,19 +178,19 @@ namespace RocketTanuki
             };
         }
 
-        public static Move Resign = new Move
+        public static readonly Move Resign = new Move
         {
             FileFrom = 2,
             FileTo = 2,
         };
 
-        public static Move Win = new Move
+        public static readonly Move Win = new Move
         {
             FileFrom = 3,
             FileTo = 3,
         };
 
-        public static Move None = new Move
+        public static readonly Move None = new Move
         {
             FileFrom = 4,
             FileTo = 4,
@@ -244,6 +201,6 @@ namespace RocketTanuki
         private const ushort Win16 = (3 << 7) + 3;
         private const ushort None16 = (4 << 7) + 4;
 
-        private static string[] RankToKanjiLetters = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+        private static readonly string[] RankToKanjiLetters = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
     }
 }
