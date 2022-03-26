@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using static RocketTanuki.Types;
@@ -168,7 +170,7 @@ namespace RocketTanuki
             var maxPiece = sideToMove == Color.Black ? Piece.BlackRook : Piece.WhiteRook;
             for (Piece pieceFrom = minPiece; pieceFrom <= maxPiece; ++pieceFrom)
             {
-                if (handPieces[(int)pieceFrom] == 0)
+                if (Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(handPieces), (nint)(uint)pieceFrom) == 0)
                 {
                     // 対象の持ち駒を持っていない
                     continue;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using static System.Math;
@@ -216,23 +218,26 @@ namespace RocketTanuki
 
             // ClippedReLU
             Span<byte> a1 = stackalloc byte[HalfDimentions * 2];
-            short[] first;
-            short[] second;
+
+            ref var first = ref Unsafe.NullRef<short>();
+            ref var second = ref Unsafe.NullRef<short>();
 
             if (position.SideToMove == Color.Black)
             {
-                first = position.State.Z1Black;
-                second = position.State.Z1White;
+                first = MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
+                second = MemoryMarshal.GetArrayDataReference(position.State.Z1White);
             }
             else
             {
-                first = position.State.Z1White;
-                second = position.State.Z1Black;
+                first = MemoryMarshal.GetArrayDataReference(position.State.Z1White);
+                second = MemoryMarshal.GetArrayDataReference(position.State.Z1Black);
             }
-            for (int i = 0; i < HalfDimentions; ++i)
+
+            ref var a1First = ref MemoryMarshal.GetReference(a1);
+            for (nuint i = 0; i < HalfDimentions; ++i)
             {
-                a1[i] = (byte)Clamp((int)first[i], 0, 127);
-                a1[i + HalfDimentions] = (byte)Clamp((int)second[i], 0, 127);
+                Unsafe.Add(ref a1First, i) = (byte)Clamp((int)Unsafe.Add(ref first, i), 0, 127);
+                Unsafe.Add(ref a1First, i + HalfDimentions) = (byte)Clamp((int)Unsafe.Add(ref second, i), 0, 127);
             }
 
             // 隠れ層第1層から隠れ層第2層の間のネットワークパラメーター
@@ -266,9 +271,10 @@ namespace RocketTanuki
             }
 
             Span<byte> a2 = stackalloc byte[32];
+            ref var a2First = ref MemoryMarshal.GetReference(a2);
             for (int outputIndex = 0; outputIndex < z2.Length; ++outputIndex)
             {
-                a2[outputIndex] = (byte)Clamp(z2[outputIndex] >> WeightScaleBits, 0, 127);
+                Unsafe.Add(ref a2First, (nint)(uint)outputIndex) = (byte)Clamp(z2[outputIndex] >> WeightScaleBits, 0, 127);
             }
 
             // 隠れ層第2層から隠れ層第3層の間のネットワークパラメーター
@@ -302,16 +308,18 @@ namespace RocketTanuki
             }
 
             Span<int> a3 = stackalloc int[32];
+            ref var a3First = ref MemoryMarshal.GetReference(a3);
             for (int outputIndex = 0; outputIndex < z3.Length; ++outputIndex)
             {
-                a3[outputIndex] = Max(0, Min(127, z3[outputIndex] >> WeightScaleBits));
+                Unsafe.Add(ref a3First, (nint)(uint)outputIndex) = Max(0, Min(127, z3[outputIndex] >> WeightScaleBits));
             }
 
             // 隠れ層第3層から出力層の間のネットワークパラメーター
-            var z4 = thirdBiases[0];
+            var z4 = MemoryMarshal.GetArrayDataReference(thirdBiases);
+            ref var thirdWeightsFirst = ref MemoryMarshal.GetArrayDataReference(thirdWeights);
             for (int inputIndex = 0; inputIndex < a3.Length; ++inputIndex)
             {
-                z4 += thirdWeights[inputIndex] * a3[inputIndex];
+                z4 += Unsafe.Add(ref thirdWeightsFirst, (nint)(uint)inputIndex) * a3[inputIndex];
             }
 
             return z4 / FVScale;
@@ -364,23 +372,24 @@ namespace RocketTanuki
             {
                 for (int rank = 0; rank < Position.BoardSize; ++rank)
                 {
-                    if (position.Board[file, rank] == Piece.NoPiece
-                        || position.Board[file, rank] == Piece.BlackKing
-                        || position.Board[file, rank] == Piece.WhiteKing)
+                    ref var board = ref position.Board[file, rank];
+
+                    if (board is Piece.NoPiece or Piece.BlackKing or Piece.WhiteKing)
                     {
                         continue;
                     }
 
                     Add(position,
-                        MakeBoardPieceId(position.Board[file, rank], file, rank),
-                        MakeBoardPieceId(position.Board[file, rank].AsOpponentPiece(), 8 - file, 8 - rank));
+                        MakeBoardPieceId(board, file, rank),
+                        MakeBoardPieceId(board.AsOpponentPiece(), 8 - file, 8 - rank));
                 }
             }
 
             // 持ち駒
+            ref var handPiecesFirst = ref MemoryMarshal.GetArrayDataReference(position.HandPieces);
             for (var handPiece = Piece.NoPiece; handPiece < Piece.NumPieces; ++handPiece)
             {
-                for (int numHandPieces = 1; numHandPieces <= position.HandPieces[(int)handPiece]; ++numHandPieces)
+                for (int numHandPieces = 1; numHandPieces <= Unsafe.Add(ref handPiecesFirst, (nint)(uint)handPiece); ++numHandPieces)
                 {
                     Add(position,
                         MakeHandPieceId(handPiece, numHandPieces),
@@ -420,7 +429,7 @@ namespace RocketTanuki
 
                 // 持ち駒を増やす
                 var handPiece = move.PieceTo.AsOpponentHandPiece();
-                var numHandPieces = position.HandPieces[(int)handPiece];
+                var numHandPieces = Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(position.HandPieces), (nint)(uint)handPiece);
                 Add(position,
                     MakeHandPieceId(handPiece, numHandPieces),
                     MakeHandPieceId(handPiece.AsOpponentPiece(), numHandPieces));
@@ -442,7 +451,7 @@ namespace RocketTanuki
 
                 // 持ち駒を減らす
                 var handPiece = move.PieceFrom;
-                var numHandPieces = position.HandPieces[(int)handPiece];
+                var numHandPieces = Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(position.HandPieces), (nint)(uint)handPiece);
                 Subtract(position,
                     MakeHandPieceId(handPiece, numHandPieces),
                     MakeHandPieceId(handPiece.AsOpponentPiece(), numHandPieces));
@@ -535,7 +544,7 @@ namespace RocketTanuki
         private static int MakeBoardPieceId(Piece piece, int file, int rank)
         {
             int square = file * Position.BoardSize + rank;
-            PieceId offset = BoardPieceIds[(int)piece];
+            PieceId offset = Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(BoardPieceIds), (nint)(uint)piece);
             Debug.Assert(offset != PieceId.PieceIdZero);
             return (int)offset + square;
         }
@@ -548,7 +557,7 @@ namespace RocketTanuki
         /// <returns></returns>
         private static int MakeHandPieceId(Piece piece, int numHandPieces)
         {
-            PieceId offset = HandPieceIds[(int)piece];
+            PieceId offset = Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(HandPieceIds), (nint)(uint)piece);
             Debug.Assert(offset != PieceId.PieceIdZero);
             // 1枚目の持ち駒のIDは0から始まるので、1引く
             return (int)offset + numHandPieces - 1;

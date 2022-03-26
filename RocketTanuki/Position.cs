@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using static RocketTanuki.Types;
 using static System.Math;
 
@@ -520,7 +522,7 @@ namespace RocketTanuki
         {
             if (move.Drop)
             {
-                if (HandPieces[(int)move.PieceFrom] == 0)
+                if (Unsafe.Add(ref MemoryMarshal.GetArrayDataReference(HandPieces), (nint)(uint)move.PieceFrom) == 0)
                 {
                     return false;
                 }
@@ -546,7 +548,7 @@ namespace RocketTanuki
             return true;
         }
 
-        private static Piece[] HandPieceTypes = new[] {
+        private static readonly Piece[] HandPieceTypes = new[] {
                 Piece.BlackRook, Piece.BlackBishop, Piece.BlackGold,Piece.BlackSilver,Piece.BlackKnight,Piece.BlackLance,Piece.BlackPawn,
                 Piece.WhiteRook, Piece.WhiteBishop, Piece.WhiteGold,Piece.WhiteSilver,Piece.WhiteKnight,Piece.WhiteLance,Piece.WhitePawn,
             };
